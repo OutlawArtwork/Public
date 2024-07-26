@@ -24,11 +24,13 @@ const web = (page) => {
       section.attributes.length > 0 &&
       section.attributes[0].value === "listing-card"
     ) {
+      // Result object
       let sectionData = {
-        details: section.innerText(),
-        link: null,
-        title: "",
-        price: null,
+        details: section.innerText(), // full listing
+        link: null, // link to listing page for additional information
+        title: "", // title of the listing
+        price: null, // price of the listing
+        description: null, // listing description
       };
 
       // Link and Title
@@ -45,29 +47,22 @@ const web = (page) => {
         }
       });
 
-      // Price
-      const price = section.querySelectorAll("p");
-      price.map((item) => {
-        if (
-          item.attributes &&
-          item.attributes.length >= 1 &&
-          item.attributes[0].value === "listing-price"
-        ) {
-          sectionData.price =
-            item.attributes[1].ownerElement.firstChild.nodeValue;
-        }
-      });
-
-      // Description
-      const description = section.querySelectorAll("p");
-      description.map((item) => {
-        if (
-          item.attributes &&
-          item.attributes.length >= 1 &&
-          item.attributes[0].value === "listing-description"
-        ) {
-          sectionData.description =
-            item.attributes[1].ownerElement.firstChild.nodeValue;
+      // Price and Description
+      const details = section.querySelectorAll("p");
+      details.map((item) => {
+        if (item.attributes && item.attributes.length >= 1) {
+          switch (item.attributes[0].value) {
+            case "listing-price": {
+              sectionData.price =
+                item.attributes[1].ownerElement.firstChild.nodeValue;
+              break;
+            }
+            case "listing-description": {
+              sectionData.description =
+                item.attributes[1].ownerElement.firstChild.nodeValue;
+              break;
+            }
+          }
         }
       });
 
